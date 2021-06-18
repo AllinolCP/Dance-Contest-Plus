@@ -1,6 +1,6 @@
 ﻿class com.clubpenguin.games.dancing.GameEngine extends com.clubpenguin.games.generic.GenericGameEngine
 {
-    var gameFilename, isMember, musicPlayer, keyListener, timeOnScreenMillis, movie, animationEngine, noteManager, netClient, menuSystem, isPlayingGame, isDancing, statsNoteBreakdown, soundData, cheerSound, startTimeMillis, currentTimeMillis, elapsedTimeMillis, keyPresses, multiplayerScores;
+    var gameFilename, isMember, musicPlayer, keyListener, timeOnScreenMillis, movie, animationEngine, noteManager, netClient, menuSystem, isPlayingGame, isDancing, statsNoteBreakdown, soundData, cheerSound, startTimeMillis, currentTimeMillis, elapsedTimeMillis, keyPresses, multiplayerScores, osuEngine;
     static var instance, SHELL;
     function GameEngine($movieClip, $gameFilename)
     {
@@ -52,13 +52,16 @@
         timeOnScreenMillis[com.clubpenguin.games.dancing.GameEngine.DIFFICULTY_MEDIUM] = 2500;
         timeOnScreenMillis[com.clubpenguin.games.dancing.GameEngine.DIFFICULTY_HARD] = 1750;
         timeOnScreenMillis[com.clubpenguin.games.dancing.GameEngine.DIFFICULTY_EXPERT] = 1500;
-        animationEngine = new com.clubpenguin.games.dancing.AnimationEngine(this, movie);
+        osuEngine = new com.clubpenguin.games.dancing.OsuGame(this, movie)
+		animationEngine = new com.clubpenguin.games.dancing.AnimationEngine(this, movie);
         noteManager = new com.clubpenguin.games.dancing.NoteManager(movie[com.clubpenguin.games.dancing.AnimationEngine.ARROWS_MOVIECLIP]);
         netClient = new com.clubpenguin.games.dancing.DanceNetClient(this);
         menuSystem = new com.clubpenguin.games.dancing.MenuSystem(this, movie[com.clubpenguin.games.dancing.AnimationEngine.MENUS_MOVIECLIP]);
         currentDifficulty = com.clubpenguin.games.dancing.GameEngine.DIFFICULTY_MEDIUM;
         isPlayingGame = false;
         isDancing = false;
+		
+		
     } // End of the function
     function destroy()
     {
@@ -171,106 +174,79 @@
     } // End of the function
     function startSong()
     {
-	trace("we sure are here");
-	trace(_global.notes);
-	if (_global.notes == null) {
-		trace("incorrect part");
-        _global.dls_dance.startSong();
-        if (netClient.currentState != com.clubpenguin.games.dancing.DanceNetClient.STATE_DISCONNECTED && netClient.currentState != com.clubpenguin.games.dancing.DanceNetClient.STATE_IN_GAME)
-        {
-            com.clubpenguin.games.dancing.GameEngine.debugTrace("startSong called when in an unknown net state: " + netClient.currentState);
-            return;
-        } // end if
-        if (isPlayingGame)
-        {
-            com.clubpenguin.games.dancing.GameEngine.debugTrace("startSong called when song already started!");
-            return;
-        } // end if
-        noteManager.destroy();
-        var _loc5;
-        if (netClient.currentState == com.clubpenguin.games.dancing.DanceNetClient.STATE_DISCONNECTED)
-        {
-            var _loc3 = com.clubpenguin.games.dancing.data.SongData.getSongData(currentSong, currentDifficulty);
-            noteManager.init(_loc3[0], _loc3[1], _loc3[2], timeOnScreenMillis[currentDifficulty]);
-            _loc5 = com.clubpenguin.games.dancing.data.SongData.getMillisPerBar(currentSong) / com.clubpenguin.games.dancing.AnimationEngine.TOTAL_DANCE_FRAMES;
-        }
-        else
-        {
-            noteManager.init(netClient.songData[0], netClient.songData[1], netClient.songData[2], timeOnScreenMillis[currentDifficulty]);
-            _loc5 = netClient.millisPerBar / com.clubpenguin.games.dancing.AnimationEngine.TOTAL_DANCE_FRAMES;
-        } // end else if
-        keyPresses = new Array();
-        if (netClient.currentState == com.clubpenguin.games.dancing.DanceNetClient.STATE_IN_GAME)
-        {
-            netClient.keyPressIDs = new Array();
-        } // end if
-        animationEngine.startSong(_loc5);
-        this.startTimer();
-        var _loc6 = netClient.millisPerBar;
-        if (netClient.currentState == com.clubpenguin.games.dancing.DanceNetClient.STATE_DISCONNECTED)
-        {
-            _loc6 = com.clubpenguin.games.dancing.data.SongData.getMillisPerBar(currentSong);
-        } // end if
-        var _loc4 = _loc6 / 4;
-        if (currentSong == com.clubpenguin.games.dancing.GameEngine.SONG_SIX)
-        {
-            startTimeMillis = startTimeMillis + _loc4 / 24;
-        }
-        else if (currentSong == com.clubpenguin.games.dancing.GameEngine.SONG_FOUR)
-        {
-            startTimeMillis = startTimeMillis + _loc4 / 16;
-        }
-        else if (currentSong == com.clubpenguin.games.dancing.GameEngine.SONG_FIVE)
-        {
-            startTimeMillis = startTimeMillis + _loc4 / 16;
-        } // end else if
-        currentRating = com.clubpenguin.games.dancing.GameEngine.MAX_RATING / 2;
-        consecutiveNotes = 0;
-        currentMultiplier = 1;
-        currentScore = 0;
-        statsLongestChain = 0;
-        statsNotesHit = 0;
-        statsNoteBreakdown = [0, 0, 0, 0, 0, 0];
-        statsTotalNotes = _loc3[0].length;
-        if (com.clubpenguin.games.dancing.GameEngine.SHELL == undefined)
-        {
-            SHELL = _global.getCurrentShell();
-        } // end if
-        com.clubpenguin.games.dancing.GameEngine.SHELL.stopMusic();
-        musicPlayer[currentSong].playSound();
-        this.handleScoreUpdate(Number.MAX_VALUE);
-        isPlayingGame = true;
-        isDancing = true;
-    } else
-    {
-		trace("succ");
-        _global.dls_dance.startSong();
-        noteManager.destroy();
-        var _loc5;
-		noteManager.init(_global.notes, _global.noteTimes, _global.noteLengths, 1250);
-		_loc5 = 2000 / com.clubpenguin.games.dancing.AnimationEngine.TOTAL_DANCE_FRAMES;
-        keyPresses = new Array();
-        animationEngine.startSong(_loc5);
-        this.startTimer();
-        currentRating = com.clubpenguin.games.dancing.GameEngine.MAX_RATING / 2;
-        consecutiveNotes = 0;
-        currentMultiplier = 1;
-        currentScore = 0;
-        statsLongestChain = 0;
-        statsNotesHit = 0;
-        statsNoteBreakdown = [0, 0, 0, 0, 0, 0];
-        statsTotalNotes = _global.notes.length;
-        if (com.clubpenguin.games.dancing.GameEngine.SHELL == undefined)
-        {
-            SHELL = _global.getCurrentShell();
-        } // end if
-        com.clubpenguin.games.dancing.GameEngine.SHELL.stopMusic();
-		//_global.AudioFilename.start();
-		var timer = setInterval(function () {_global.AudioFilename.start(); clearInterval(timer)}, _global.AudioLeadIn);
-        this.handleScoreUpdate(Number.MAX_VALUE);
-        isPlayingGame = true;
-        isDancing = true;
-    } // End of the function
+		trace("we sure are here");
+		trace(osuEngine.playing);
+		if (!osuEngine.playing) {
+			trace("incorrect part");
+			_global.dls_dance.startSong();
+			if (netClient.currentState != com.clubpenguin.games.dancing.DanceNetClient.STATE_DISCONNECTED && netClient.currentState != com.clubpenguin.games.dancing.DanceNetClient.STATE_IN_GAME)
+			{
+				com.clubpenguin.games.dancing.GameEngine.debugTrace("startSong called when in an unknown net state: " + netClient.currentState);
+				return;
+			} // end if
+			if (isPlayingGame)
+			{
+				com.clubpenguin.games.dancing.GameEngine.debugTrace("startSong called when song already started!");
+				return;
+			} // end if
+			noteManager.destroy();
+			var _loc5;
+			if (netClient.currentState == com.clubpenguin.games.dancing.DanceNetClient.STATE_DISCONNECTED)
+			{
+				var _loc3 = com.clubpenguin.games.dancing.data.SongData.getSongData(currentSong, currentDifficulty);
+				noteManager.init(_loc3[0], _loc3[1], _loc3[2], timeOnScreenMillis[currentDifficulty]);
+				_loc5 = com.clubpenguin.games.dancing.data.SongData.getMillisPerBar(currentSong) / com.clubpenguin.games.dancing.AnimationEngine.TOTAL_DANCE_FRAMES;
+			}
+			else
+			{
+				noteManager.init(netClient.songData[0], netClient.songData[1], netClient.songData[2], timeOnScreenMillis[currentDifficulty]);
+				_loc5 = netClient.millisPerBar / com.clubpenguin.games.dancing.AnimationEngine.TOTAL_DANCE_FRAMES;
+			} // end else if
+			keyPresses = new Array();
+			if (netClient.currentState == com.clubpenguin.games.dancing.DanceNetClient.STATE_IN_GAME)
+			{
+				netClient.keyPressIDs = new Array();
+			} // end if
+			animationEngine.startSong(_loc5);
+			this.startTimer();
+			var _loc6 = netClient.millisPerBar;
+			if (netClient.currentState == com.clubpenguin.games.dancing.DanceNetClient.STATE_DISCONNECTED)
+			{
+				_loc6 = com.clubpenguin.games.dancing.data.SongData.getMillisPerBar(currentSong);
+			} // end if
+			var _loc4 = _loc6 / 4;
+			if (currentSong == com.clubpenguin.games.dancing.GameEngine.SONG_SIX)
+			{
+				startTimeMillis = startTimeMillis + _loc4 / 24;
+			}
+			else if (currentSong == com.clubpenguin.games.dancing.GameEngine.SONG_FOUR)
+			{
+				startTimeMillis = startTimeMillis + _loc4 / 16;
+			}
+			else if (currentSong == com.clubpenguin.games.dancing.GameEngine.SONG_FIVE)
+			{
+				startTimeMillis = startTimeMillis + _loc4 / 16;
+			} // end else if
+			currentRating = com.clubpenguin.games.dancing.GameEngine.MAX_RATING / 2;
+			consecutiveNotes = 0;
+			currentMultiplier = 1;
+			currentScore = 0;
+			statsLongestChain = 0;
+			statsNotesHit = 0;
+			statsNoteBreakdown = [0, 0, 0, 0, 0, 0];
+			statsTotalNotes = _loc3[0].length;
+			if (com.clubpenguin.games.dancing.GameEngine.SHELL == undefined)
+			{
+				SHELL = _global.getCurrentShell();
+			} // end if
+			com.clubpenguin.games.dancing.GameEngine.SHELL.stopMusic();
+			musicPlayer[currentSong].playSound();
+			this.handleScoreUpdate(Number.MAX_VALUE);
+			isPlayingGame = true;
+			isDancing = true;
+		} else	{
+			osuEngine.startGame()
+		} // End of the function
 	}
     function endSong()
     {

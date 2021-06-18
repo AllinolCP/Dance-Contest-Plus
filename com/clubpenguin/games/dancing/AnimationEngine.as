@@ -1,6 +1,6 @@
 class com.clubpenguin.games.dancing.AnimationEngine
 {
-    var gameEngine, movie, dancingPenguin, backgroundLightBuffer, hideHUDTimeMillis, timePerFrameMillis, animationTimeMillis;
+    var gameEngine, movie, dancingPenguin, backgroundLightBuffer, hideHUDTimeMillis, timePerFrameMillis, animationTimeMillis, osuEngine;
     function AnimationEngine($gameEngine, $movie)
     {
         gameEngine = $gameEngine;
@@ -28,6 +28,10 @@ class com.clubpenguin.games.dancing.AnimationEngine
         this.setMultiplayerScoreVisibility(false);
         showHUD = true;
         hideHUDTimeMillis = getTimer() + (com.clubpenguin.games.dancing.AnimationEngine.HUD_SHOW_TIME + com.clubpenguin.games.dancing.AnimationEngine.HUD_SHOW_TIME);
+		if(_global.osuEngine != undefined) {
+			osuEngine = _global.osuEngine;
+		}
+		
     } // End of the function
     function setQualityMode($quality)
     {
@@ -303,13 +307,13 @@ class com.clubpenguin.games.dancing.AnimationEngine
         var _loc6 = gameEngine.currentSong;
         var _loc5 = gameEngine.elapsedTimeMillis;
         var _loc11 = gameEngine.isPlayingGame;
-		if (_global.notes == null) {
+		if (osuEngine.notes == null) {
 			if (_loc5 >= com.clubpenguin.games.dancing.data.SongData.getSongLengthMillis(_loc6))
 			{
 				return;
 			} // end if
 		}
-		else if (_loc5 >= (_global.playtime_seconds * 1000))
+		else if (_loc5 >= (osuEngine.playtime_seconds * 1000))
 		{
 			return;
 		} // end if
@@ -420,10 +424,10 @@ class com.clubpenguin.games.dancing.AnimationEngine
                         _loc2 = com.clubpenguin.games.dancing.AnimationEngine.DANCER_MOVIECLIP_TERRIBLE + (_loc3 % 2 + 1);
                     } // end if
                 } // end if
-				if (_global.notes == null) {
+				if (osuEngine.notes == null) {
 					var _loc12 = com.clubpenguin.games.dancing.data.SongData.getSongLengthMillis(_loc6) - com.clubpenguin.games.dancing.data.SongData.getMillisPerBar(_loc6) * 2;
 				} else {
-					var _loc12 = (_global.playtime_seconds * 1000) - 2000 * 2;
+					var _loc12 = (osuEngine.playtime_seconds * 1000) - 2000 * 2;
 				}
                 if (_loc5 >= _loc12)
                 {

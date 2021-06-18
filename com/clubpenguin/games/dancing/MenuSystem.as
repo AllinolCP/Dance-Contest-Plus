@@ -82,52 +82,6 @@ class com.clubpenguin.games.dancing.MenuSystem
             } 
             case com.clubpenguin.games.dancing.MenuSystem.MENU_WELCOME_OPTIONS:
             {
-				var pressed = "";
-				_global.keyListener = new Object();
-				_global.keyListener.onKeyDown = function(){
-					pressed += Key.getCode();
-					pressed = pressed.substr(-20, 20);
-					trace(pressed);
-					if(pressed == "38384040373937396665"){
-						trace("KONAMIM CODE!");
-						var secretOptions = new Array();
-						secretOptions.push("View GitHub Repo");
-						secretOptions.push(com.clubpenguin.util.LocaleText.getText("menu_song_item_back"));
-						_global.movie.speech.message.text = "Dance Contest+ was created by Thestickman391!\nI hope you enjoy :)";
-						for (var i = 1; i <= 5; ++i)
-						{
-							if (_global.movie.speech.message.textHeight < (i * 24) + 12)
-							{
-								_global.movie.speech.bubble._height = 80 + (i * 12);
-							} // end if
-						} // end of for
-						var _loc6 = 3.500000E+000;
-						_global.movie.options.background._height =  secretOptions.length * 27 + ( secretOptions.length - 1) * _loc6 + 14;
-						_global.movie.options.background._y = (-30.5 * ( secretOptions.length)) + 122;
-						var _loc2 = 0;
-						while (_loc2++ < 9)
-						{
-							var pointer = "item" + String(_loc2);
-							trace(pointer);
-							_global.movie.options[pointer]._visible = false;
-						} // end while
-						for (var _loc2 = 0; _loc2 <  secretOptions.length; ++_loc2)
-						{
-							var pointer = "item" + String(_loc2 + 1);
-							_global.movie.options[pointer].label.text =  secretOptions[_loc2];
-							trace(pointer);
-							_global.movie.options[pointer]._visible = true;
-							_global.movie.options[pointer]._y = (_loc2 - 1) * 30.5 - ((( secretOptions.length - 5) * 30.5) - 7);
-						} // end of for
-						_global.movie.options._visible = true;
-						Key.removeListener(keyListener);
-						_global.keyListener = com.clubpenguin.games.dancing.MenuSystem.MENU_SECRET_KONAMI;
-						pressed = "";
-						break;
-					}
-				}
-				Key.addListener(_global.keyListener);
-				
                 movie[com.clubpenguin.games.dancing.MenuSystem.MOVIE_HOST_COMPERE].gotoAndStop(com.clubpenguin.games.dancing.MenuSystem.ANIM_FRAME_WAIT);
                 movie[com.clubpenguin.games.dancing.MenuSystem.MOVIE_HOST_COMPERE].animation.movie.gotoAndPlay("talkStart");
                 var _loc6 = com.clubpenguin.util.LocaleText.getText("menu_welcome_item_multiplayer");
@@ -599,178 +553,9 @@ class com.clubpenguin.games.dancing.MenuSystem
 			// i swear i normally write much better code than this
 				trace(currentMenu);
 				trace(hasDownloaded);
-				if (_global.fileName == "FAILED!!!")
-				{
-					_global.fileName = null;
-					this.loadMenu(com.clubpenguin.games.dancing.MenuSystem.MENU_OSU_URL);
-				}
-				if (_global.hasDownloaded == true && $buttonID != undefined)
-				{
-					trace("button id is " + $buttonID)
-					trace("fuck my life");
-					var send_lv:LoadVars = new LoadVars();
-					var result_lv:LoadVars = new LoadVars();
-
-					result_lv.onLoad = function(success:Boolean):Void {
-					   _global.notes = result_lv.notes.split(',');
-					   _global.noteTimes = result_lv.noteTimes.split(',');
-					   _global.noteLengths = result_lv.noteLengths.split(',');
-					   var AudioFilename2 = result_lv.AudioFilename;
-					   _global.playtime_seconds = result_lv.playtime_seconds;
-					   _global.AudioLeadIn = 0;
-					   if (result_lv.AudioLeadIn != null)
-					   {
-							_global.AudioLeadIn = result_lv.AudioLeadIn;
-					   }
-					   trace(_global.AudioFilename);
-					   trace(_global.AudioLeadIn);
-					   trace("playtime_seconds " + _global.playtime_seconds);
-					   _global.AudioFilename = new Sound();
-					   _global.AudioFilename.onLoad = function () {  
-							if (!success) {
-								trace("Error connecting to server.");
-								_global.movie.loading._visible = false;
-								_global.movie.host.animation.movie.gotoAndPlay("talkStart");
-							    _global.movie.speech.message.text = "Oops! That didn't work!\nTry exiting and re-entering Dance Contest and try again.";
-								for (var i = 1; i <= 5; ++i)
-								{
-									if (_global.movie.speech.message.textHeight < (i * 24) + 12)
-									{
-										_global.movie.speech.bubble._height = 80 + (i * 12);
-									} // end if
-								} // end of for
-								_global.fileName = "FAILED!!!";
-								break;					   
-						   
-						   } else {
-							   _global.movie.host.gotoAndStop("exit");
-							   this.hideSpeechBubble();
-							   _global.movie.speech._visible = false;
-							   _global.movie.options._visible = false;
-							   _global.movie.loading._visible = false;
-							   _global.movie.howtoplay._visible = false;
-								_global.movie.howtoplay.gotoAndStop(1);
-							   break;
-						   }
-						}
-						_global.AudioFilename.loadSound("https://dance-contest-plus.herokuapp.com/tmp/" + _global.fileName.substr(0, _global.fileName.length-4) + "/" + AudioFilename2, false);
-					}
-					send_lv.sendAndLoad('https://dance-contest-plus.herokuapp.com/convert_osu!_to_DC.php?fileName=' + _global.fileName + '&chart=' + _global.charts[($buttonID - 1)], result_lv, 'POST');
-					trace('https://dance-contest-plus.herokuapp.com/convert_osu!_to_DC.php?fileName=' + _global.fileName + '&chart=' + _global.charts[($buttonID - 1)]);
-					_global.movie.loading._visible = true;
-					this.showSpeechBubble("Converting beatmap...\nPlease wait...");
-					this.hideMenuOptions();
-					_global.movie.howtoplay._visible = false;
-					_global.movie.howtoplay.gotoAndStop(1);
-					break;
-				} else {
-					_global.dls_dance._seenInstructions = false;
-					switch ($buttonID)
-					{
-						case 1:
-						{
-							trace("url submitted " + _global.movie.options.urlInput.urlInputText.text);
-							var urlSubmitted = _global.movie.options.urlInput.urlInputText.text;
-							var send_dl:LoadVars = new LoadVars();
-							var result_dl:LoadVars = new LoadVars();
-							var charts = new Array();
-							result_dl.onLoad = function(success:Boolean):Void {
-								if (!success) {
-									trace("Error connecting to server.");
-									_global.movie.loading._visible = false;
-									_global.movie.host.animation.movie.gotoAndPlay("talkStart");
-									_global.movie.speech.message.text = "Oops! That didn't work!\nUnfortunately maps that don't have a leaderboard cannot be used at this time.";
-									for (var i = 1; i <= 5; ++i)
-									{
-										if (_global.movie.speech.message.textHeight < (i * 24) + 12)
-										{
-											_global.movie.speech.bubble._height = 80 + (i * 12);
-										} // end if
-									} // end of for
-									_global.fileName = "FAILED!!!";
-									break;
-								} else {
-								   trace(result_dl.charts.split('.osu'));
-								   charts = result_dl.charts.split('.osu');
-								   for(i=(charts.length); i>=0; i--)
-								   {
-										if (charts[i] == "")
-										charts.splice(i,1);
-								   }
-								   _global.charts = charts;
-								   trace(result_dl.fileName);
-								   fileName = result_dl.fileName;
-								   _global.fileName = result_dl.fileName;
-								   var beatmapID = urlSubmitted.split('https://osu.ppy.sh/beatmapsets/')[1];
-								   var beatmapID = beatmapID.split('#')[0];
-								   var rawFileName = fileName.split(beatmapID + " ")[1];
-								   currentMenu = 692;
-								   _global.hasDownloaded = true;
-								   trace(hasDownloaded);
-								   _global.movie.host.animation.movie.gotoAndPlay("talkStart");
-								   trace("current menu is " + currentMenu);
-								   _global.movie.loading._visible = false;
-								   _global.movie.speech.message.text = "Successfully downloaded " + rawFileName.split(".osz")[0] + "!\nPlease pick a beatmap";
-									for (var i = 1; i <= 5; ++i)
-									{
-										if (_global.movie.speech.message.textHeight < (i * 24) + 12)
-										{
-											_global.movie.speech.bubble._height = 80 + (i * 12);
-										} // end if
-									} // end of for
-									var _loc6 = 3.500000E+000;
-									trace("charts lenghts = " + charts.length);
-									_global.movie.options.background._height = charts.length * 27 + (charts.length - 1) * _loc6 + 14;
-									_global.movie.options.background._y = (-30.5 * (charts.length)) + 122;
-									var _loc2 = 0;
-									while (_loc2++ < 9)
-									{
-										var pointer = "item" + String(_loc2);
-										trace(pointer);
-										_global.movie.options[pointer]._visible = false;
-									} // end while
-									for (var _loc2 = 0; _loc2 < charts.length; ++_loc2)
-									{
-										var pointer = "item" + String(_loc2 + 1);
-										_global.movie.options[pointer].label.text = charts[_loc2];
-										trace(pointer);
-										_global.movie.options[pointer]._visible = true;
-										_global.movie.options[pointer]._y = (_loc2 - 1) * 30.5 - (((charts.length - 5) * 30.5) - 7);
-									} // end of for
-									_global.movie.options._visible = true;
-									_global.movie.options.urlInput._visible = false;
-									_global.movie.howtoplay._visible = false;
-									_global.movie.howtoplay.gotoAndStop(1);
-									talking = false;
-									break;
-								}
-							}
-							var download_url = "https://beatconnect.io/b/" + urlSubmitted.split('https://osu.ppy.sh/beatmapsets/')[1]; //supposidly you can use the osu! api to grab DL links to but i could never figure it out, so hopefully this site never goes down lol
-							download_url = download_url.split("#")[0]; //putting a # anywhere in a url fails for whatever reason lol
-							trace(download_url);
-							_global.movie.loading._visible = true;
-							_global.movie.host.animation.movie.gotoAndPlay("talkStart");
-							this.showSpeechBubble("Downloading beatmap...\nPlease wait...");
-							this.hideMenuOptions();
-							try {
-								send_dl.sendAndLoad('https://dance-contest-plus.herokuapp.com/retrieve_osu!_from_url.php?download_url=' + download_url, result_dl, 'POST');
-							} catch ( e ){
-								trace(e);
-							}
-							break;
-						} 
-						case 2:
-						{
-							this.loadMenu(com.clubpenguin.games.dancing.MenuSystem.MENU_WELCOME_OPTIONS);
-							return;
-						} 
-						default:
-						{
-							return;
-						} 
-					} // End of switch
-					break;
-				}
+				var osuEngine = _global.osuEngine;
+				osuEngine.loadMenu(this, $buttonID);
+				break
             } 
             case com.clubpenguin.games.dancing.MenuSystem.MENU_SINGLEPLAYER_INTRO:
             {
@@ -879,7 +664,7 @@ class com.clubpenguin.games.dancing.MenuSystem
                     } 
                     case 2:
                     {
-						if (_global.notes == null) {
+						if (_global.osuEngine.notes == null) {
 							this.loadMenu(com.clubpenguin.games.dancing.MenuSystem.MENU_SINGLEPLAYER_DIFFICULTY);
 						} else {
 							this.loadMenu(com.clubpenguin.games.dancing.MenuSystem.MENU_SINGLEPLAYER_PREGAME);
@@ -889,37 +674,12 @@ class com.clubpenguin.games.dancing.MenuSystem
                     case 3:
                     {
                         this.loadMenu(com.clubpenguin.games.dancing.MenuSystem.MENU_SINGLEPLAYER_SONG);
-						var send_rm:LoadVars = new LoadVars();
-						var result_rm:LoadVars = new LoadVars();
-						send_rm.sendAndLoad('https://dance-contest-plus.herokuapp.com/cleanup.php?fileName=' + _global.fileName, result_rm, 'POST');
-						//forgive me, for i have sinned
-						_global.movie = null;
-						_global.hasDownloaded = null;
-						_global.fileName - null;
-						_global.charts = null;
-						_global.notes = null;
-						_global.noteTimes = null;
-						_global.noteLengths = null;
-						_global.AudioFilename = null;
-						_global.playtime_seconds = null;
-                        break;
+						_global.osuEngine.destroy()
                     } 
                     case 4:
                     {
-						var send_rm:LoadVars = new LoadVars();
-						var result_rm:LoadVars = new LoadVars();
-						send_rm.sendAndLoad('https://dance-contest-plus.herokuapp.com/cleanup.php?fileName=' + _global.fileName, result_rm, 'POST');
                         this.loadMenu(com.clubpenguin.games.dancing.MenuSystem.MENU_WELCOME_OPTIONS);
-						//im genuinely so sorry
-						_global.movie = null;
-						_global.hasDownloaded = null;
-						_global.fileName - null;
-						_global.charts = null;
-						_global.notes = null;
-						_global.noteTimes = null;
-						_global.noteLengths = null;
-						_global.AudioFilename = null;
-						_global.playtime_seconds = null;
+						_global.osuEngine.destroy()
                         break;
                     } 
                     default:

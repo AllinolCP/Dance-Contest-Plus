@@ -19,14 +19,15 @@ If you're a CPPS owner and you don't want to use my herokuapp setup then you are
 
 ## Current Features
 - Importing osu!mania songs
+- Not shitty code
 
 ## Planned Features
-- Importing songs to the actual song list, permanently 
-- Using the actual osu! api to grab songs
+- Using the actual osu! api to grab songs (next thing)
+- Importing songs to the actual song list, permanently  
 - Auto/Bot mode
 - Hyperspeed
 - Actually syncing the penguins dancing to the beat of the song
-- Not shitty code
+
 
 ## FAQ
 ### Why doesn't my song work?
@@ -53,8 +54,6 @@ See question 2
 That's not a question
 ### I encountered a crash/bug?
 Much better
-### Why is your code so shit?
-See question 2
 ### Why didn't you package everything into one SWF?
 See question 2
 ### Why are there all the useless `trace`s all over your code?
