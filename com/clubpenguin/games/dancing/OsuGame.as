@@ -7,6 +7,7 @@ class com.clubpenguin.games.dancing.OsuGame
 	function OsuGame(engine, movie) {
 	
 		this.downloaded = false;
+		this.playing = false;
 		this.movie = null;
 		this.fileName = null;
 		this.charts = new Array();
@@ -141,7 +142,6 @@ class com.clubpenguin.games.dancing.OsuGame
 			break;
 			case 2:
 			{
-				trace('FOFOFDOFDFOSDFOFD');
 				menuSystem.loadMenu(com.clubpenguin.games.dancing.MenuSystem.MENU_WELCOME_OPTIONS);
 				return;
 			}
@@ -154,6 +154,7 @@ class com.clubpenguin.games.dancing.OsuGame
 	}
 	
 	function convertSongAndPlay(parent, buttonId) {
+		this.playing = true;
 		trace("button id is " + buttonId)
 		trace("fuck my life");
 		var send_lv:LoadVars = new LoadVars();
@@ -256,6 +257,7 @@ class com.clubpenguin.games.dancing.OsuGame
 		var result_rm:LoadVars = new LoadVars();
 		send_rm.sendAndLoad('https://dance-contest-plus-plus.herokuapp.com/cleanup?fileName=' + this.fileName, result_rm, 'POST');
 
+		this.playing =false;
 		this.movie = null;
 		this.downloaded = false;
 		this.fileName = null;
