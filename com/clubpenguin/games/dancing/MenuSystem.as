@@ -549,10 +549,6 @@ class com.clubpenguin.games.dancing.MenuSystem
             } 
 			case com.clubpenguin.games.dancing.MenuSystem.MENU_OSU_URL:
             {
-			// please im so sorry
-			// i swear i normally write much better code than this
-				trace(currentMenu);
-				trace(hasDownloaded);
 				var osuEngine = _global.osuEngine;
 				osuEngine.loadMenu(this, $buttonID);
 				break

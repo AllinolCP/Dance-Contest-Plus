@@ -2,7 +2,7 @@
 
 class com.clubpenguin.games.dancing.OsuGame
 {
-	var downloaded, movie, hasDownloaded, charts, notes, noteTimes, noteLengths, AudioFilename, playtime_seconds, engine, menuSystem;
+	var downloaded, movie, urlSubmitted, result_dl,currentMenu, talking, fileName, playing, AudioLeadIn, result_lv, charts, notes, noteTimes, noteLengths, AudioFilename, playtime_seconds, engine, menuSystem;
 
 	function OsuGame(engine, movie) {
 	
@@ -192,7 +192,7 @@ class com.clubpenguin.games.dancing.OsuGame
         this.engine.statsTotalNotes = this.notes.length;
         if (com.clubpenguin.games.dancing.GameEngine.SHELL == undefined)
         {
-            this.engine.SHELL = global.getCurrentShell();
+            this.engine.SHELL = _global.getCurrentShell();
         } // end if
         com.clubpenguin.games.dancing.GameEngine.SHELL.stopMusic();
 		//this.AudioFilename.start();
