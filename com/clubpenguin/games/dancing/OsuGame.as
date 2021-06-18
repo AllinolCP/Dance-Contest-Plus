@@ -132,7 +132,7 @@ class com.clubpenguin.games.dancing.OsuGame
 				menuSystem.showSpeechBubble("Downloading beatmap...\nPlease wait...");
 				menuSystem.hideMenuOptions();
 				try {
-					send_dl.sendAndLoad('https://dance-contest-plus.herokuapp.com/getOsuMap?mapId=' + mapId, result_dl, 'POST');
+					send_dl.sendAndLoad('https://dance-contest-plus-plus.herokuapp.com/getOsuMap?mapId=' + mapId, result_dl, 'POST');
 				} catch (e){
 					trace(e);
 				}
@@ -159,9 +159,9 @@ class com.clubpenguin.games.dancing.OsuGame
 		var send_lv:LoadVars = new LoadVars();
 		var result_lv:LoadVars = new LoadVars();
 
-		send_lv.sendAndLoad('https://dance-contest-plus.herokuapp.com/convertOsuToDC?fileName=' + this.fileName + '&chart=' + this.charts[(buttonId - 1)], result_lv, 'POST');
+		send_lv.sendAndLoad('https://dance-contest-plus-plus.herokuapp.com/convertOsuToDC?fileName=' + this.fileName + '&chart=' + this.charts[(buttonId - 1)], result_lv, 'POST');
 		
-		trace('https://dance-contest-plus.herokuapp.com/convertOsuToDC?fileName=' + this.fileName + '&chart=' + this.charts[(buttonId - 1)]);
+		trace('https://dance-contest-plus-plus.herokuapp.com/convertOsuToDC?fileName=' + this.fileName + '&chart=' + this.charts[(buttonId - 1)]);
 		parent.movie.loading._visible = true;
 		parent.showSpeechBubble("Converting beatmap...\nPlease wait...");
 		parent.hideMenuOptions();
@@ -218,7 +218,7 @@ class com.clubpenguin.games.dancing.OsuGame
 	   trace("playtime_seconds " + this.playtime_seconds);
 	   this.AudioFilename = new Sound();
 	   this.AudioFilename.onLoad = Delegate.create(this, onAudioLoad)
-	   this.AudioFilename.loadSound("https://dance-contest-plus.herokuapp.com/tmp/" + this.fileName.substr(0, this.fileName.length-4) + "/" + AudioFilename2, false);
+	   this.AudioFilename.loadSound("https://dance-contest-plus-plus.herokuapp.com/tmp/" + this.fileName.substr(0, this.fileName.length-4) + "/" + AudioFilename2, false);
 	
 	}
 	
@@ -254,7 +254,7 @@ class com.clubpenguin.games.dancing.OsuGame
 	function destroy() {
 		var send_rm:LoadVars = new LoadVars();
 		var result_rm:LoadVars = new LoadVars();
-		send_rm.sendAndLoad('https://dance-contest-plus.herokuapp.com/cleanup?fileName=' + this.fileName, result_rm, 'POST');
+		send_rm.sendAndLoad('https://dance-contest-plus-plus.herokuapp.com/cleanup?fileName=' + this.fileName, result_rm, 'POST');
 
 		this.movie = null;
 		this.downloaded = false;

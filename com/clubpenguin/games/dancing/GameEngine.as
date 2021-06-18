@@ -65,23 +65,7 @@
     } // End of the function
     function destroy()
     {
-		var send_rm:LoadVars = new LoadVars();
-		var result_rm:LoadVars = new LoadVars();
-		send_rm.sendAndLoad('https://dance-contest-plus.herokuapp.com/cleanup.php?fileName=' + _global.fileName, result_rm, 'POST');
-		//IM SO SORRY
-		_global.movie = null;
-		_global.hasDownloaded = null;
-		_global.fileName - null;
-		_global.charts = null;
-		_global.notes = null;
-		_global.noteTimes = null;
-		_global.noteLengths = null;
-		_global.AudioFilename = null;
-		_global.playtime_seconds = null;
-        _global.dls_dance.stopDancingContest();
-        this.leaveMultiplayerServer();
-        Key.removeListener(keyListener);
-        keyListener = undefined;
+		this.osuEngine.destroy()
         var _loc5 = _global.getCurrentEngine();
         _loc5.sendGameOver(totalScore);
         var _loc4 = statsNoteBreakdown[com.clubpenguin.games.dancing.Note.RESULT_PERFECT] + statsNoteBreakdown[com.clubpenguin.games.dancing.Note.RESULT_GREAT] + statsNoteBreakdown[com.clubpenguin.games.dancing.Note.RESULT_GOOD] + statsNoteBreakdown[com.clubpenguin.games.dancing.Note.RESULT_ALMOST] + statsNoteBreakdown[com.clubpenguin.games.dancing.Note.RESULT_BOO] + statsNoteBreakdown[com.clubpenguin.games.dancing.Note.RESULT_MISS];
